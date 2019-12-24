@@ -90,15 +90,9 @@ def make_voca_list_from_sentence_list(sentence_list):
 
 def remove_stopwords(voca_list, stopword_list):
     stopword_replaced_voca_list = []
-    sentence_list = make_sentence_list_from_voca_list(voca_list)
-    re_space = re.compile(r'\s+')
 
-    for line in sentence_list:
-        for stopword in stopword_list:
-            line = ' '.join(re.compile('[가-힣]{2,}').findall(line))
-            re_word = re.compile(r'\b{0}\b'.format(stopword))
-            line = (re_space.sub(' ', re_word.sub('', line)).strip())
-        stopword_replaced_voca_list.append(line.split(' '))
+    for line in voca_list:
+        stopword_replaced_voca_list.append(list(filter(lambda x: len(x) > 1 and x not in stopword_list, line)))
 
     return stopword_replaced_voca_list
 
@@ -130,7 +124,7 @@ def main():
 
     raw_noun_voca_list = make_noun_voca_list(raw_list, 'Okt')
 
-    stopwords = pd.ExcelFile('stopwords_ko_20191105.xlsx').parse('STOPWORDS').STOPWORDS
+    stopwords = pd.ExcelFile('stopwords_ko_20191105.xlsx').parse('STOPWORDS').STOPWORDS.values
     stopwords_custom = ['우리', '최근']
 
     stopword_replaced_voca_list = remove_stopwords(raw_noun_voca_list, stopwords)
