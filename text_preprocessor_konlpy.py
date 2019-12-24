@@ -131,7 +131,7 @@ def main():
     raw_noun_voca_list = make_noun_voca_list(raw_list, 'Okt')
 
     stopwords = pd.ExcelFile('stopwords_ko_20191105.xlsx').parse('STOPWORDS').STOPWORDS
-    stopwords_custom = ['우리']
+    stopwords_custom = ['우리', '최근']
 
     stopword_replaced_voca_list = remove_stopwords(raw_noun_voca_list, stopwords)
     stopword_replaced_voca_list = remove_stopwords(stopword_replaced_voca_list, stopwords_custom)
