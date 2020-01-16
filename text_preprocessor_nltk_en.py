@@ -142,8 +142,8 @@ def main():
 
     save_most_common_words(stopword_replaced_voca_list, 200, common_words_path)
 
-    raw_noun_sentence_list = make_sentence_list_from_voca_list(stopword_replaced_voca_list)
-    raw_df[output_list_name] = raw_noun_sentence_list
+    raw_sentence_list = make_sentence_list_from_voca_list(stopword_replaced_voca_list)
+    raw_df[output_list_name] = raw_sentence_list
 
     raw_df.to_csv(output_path, sep=',', index=False, encoding='utf-8-sig')
 
