@@ -112,12 +112,38 @@ def print_most_common_words(voca_list, top_count):
     print(Counter(list(chain.from_iterable(voca_list))).most_common(top_count))
 
 
+# 단어 빈도 데이터 저장
+#
+# 1. Sample Data/Input Exmaple
+# input_data = [['사과', '바나나', '사과'], ['딸기', '사과', '바나나', '수박']]
+# top_count = n (int, 상위 n위, 저장 CSV 파일 경로)
+# print_most_common_words(input_data, 4)
+#
+# 2. Output Example/Data
+# output_data: CSV 파일
+# Column Name: WORD, COUNT
+# 주의: 동 순위가 있다면 앞에 있는 element 순서대로 끊어짐 (예: [('사과', 3), ('바나나', 2), ('딸기', 1)])
+
+def save_most_common_words(voca_list, top_count, output_path):
+    word_count_list = Counter(list(chain.from_iterable(voca_list))).most_common(top_count)
+    word_list = []
+    count_list = []
+    for idx in range(len(word_count_list)):
+        word_list.append(word_count_list[idx][0])
+        count_list.append(word_count_list[idx][1])
+    word_count_df = pd.DataFrame.from_records(zip(word_list, count_list), columns=['WORD', 'COUNT'])
+
+    word_count_df.to_csv(output_path, sep=',', index=False, encoding='utf-8-sig')
+
+
 def main():
     raw_path = 'data/sample_newspaper.csv'
     raw_list_name = '기사'
 
     output_path = 'data/sample_newspaper_modified.csv'
     output_list_name = '기사_명사'
+
+    common_words_path = 'data/sample_newspaper_common_word.csv'
 
     raw_df = pd.read_csv(raw_path, sep=',', encoding='utf-8')
     raw_list = raw_df[raw_list_name]
@@ -131,6 +157,8 @@ def main():
     stopword_replaced_voca_list = remove_stopwords(stopword_replaced_voca_list, stopwords_custom)
 
     print_most_common_words(stopword_replaced_voca_list, 200)
+
+    save_most_common_words(stopword_replaced_voca_list, 200, common_words_path)
 
     raw_noun_sentence_list = make_sentence_list_from_voca_list(stopword_replaced_voca_list)
     raw_df[output_list_name] = raw_noun_sentence_list
